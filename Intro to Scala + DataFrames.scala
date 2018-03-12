@@ -93,8 +93,7 @@ def fizzBuzz(x:Int) = {
     if (x % 15 == 0)
       println("FizzBuzz")
     else if (x % 3 == 0)
-      println("Fizz");
-      println(x);
+      println("Fizz")
     else if (x % 5 == 0)
       println("Buzz")
     else
@@ -106,6 +105,84 @@ def fizzBuzz(x:Int) = {
 // COMMAND ----------
 
 fizzBuzz(100)
+
+// COMMAND ----------
+
+var df = sqlContext
+  .read
+  .format("csv")
+  .option("header", "true")
+  .option("inferSchema", "true")
+  .load("/FileStore/tables/train.csv")
+
+// COMMAND ----------
+
+df.show(200)
+
+// COMMAND ----------
+
+df.printSchema
+
+// COMMAND ----------
+
+df.columns
+
+// COMMAND ----------
+
+numericCols = Array()
+for (dtype <- df.dtypes) {
+  if dtype
+  println(dtype)
+}
+
+// COMMAND ----------
+
+var numericalColumns = df.dtypes.filter(colTup => colTup._2 == "IntegerType" || colTup._2 == "DoubleType").map(colTup => colTup._1)
+
+// COMMAND ----------
+
+df.describe().show()
+
+// COMMAND ----------
+
+df.filter($"Age" >= 21).show()
+
+// COMMAND ----------
+
+import org.apache.spark.sql.functions.{avg, corr, count}
+
+// COMMAND ----------
+
+df.filter("Embarked = 'S'").select(avg("Survived")).show()
+
+// COMMAND ----------
+
+df.select(corr("Age", "Survived")).show()
+
+// COMMAND ----------
+
+df = df.na.fill("N/A")
+df = df.na.fill(1234567)
+
+// COMMAND ----------
+
+df.show(100)
+
+// COMMAND ----------
+
+df.groupBy("Embarked").agg(avg("Survived"), count("Survived")).show()
+
+// COMMAND ----------
+
+df = df.withColumnRenamed("Survived", "label")
+
+// COMMAND ----------
+
+df.show()
+
+// COMMAND ----------
+
+df = df.withColumn("FamilyCount", $"SibSp" + $"Parch")
 
 // COMMAND ----------
 
