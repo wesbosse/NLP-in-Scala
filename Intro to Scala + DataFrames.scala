@@ -87,4 +87,26 @@ stripAnchor("google.com#anchor")
 
 // COMMAND ----------
 
+def fizzBuzz(x:Int) = {
+  val list = 1 to x
+  for (x <- list) {
+    if (x % 15 == 0)
+      println("FizzBuzz")
+    else if (x % 3 == 0)
+      println("Fizz");
+      println(x);
+    else if (x % 5 == 0)
+      println("Buzz")
+    else
+      println(x)
+  }
+
+}
+
+// COMMAND ----------
+
+fizzBuzz(100)
+
+// COMMAND ----------
+
 
